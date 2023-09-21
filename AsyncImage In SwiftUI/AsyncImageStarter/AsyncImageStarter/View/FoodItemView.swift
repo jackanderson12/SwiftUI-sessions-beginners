@@ -17,11 +17,27 @@ struct FoodItemView: View {
         
         HStack(alignment: .top) {
             
-            VStack {
-                
-                Rectangle()
-                .frame(width: 100, height: 100)
-                .clipShape(RoundedRectangle(cornerRadius: cornerRadius))
+            CachedImage(item: (name: item.title, url: item.imgUrl), animation: .spring(), transition: .scale.combined(with: .opacity)) { phase in
+                switch phase {
+                case .empty:
+                    ProgressView()
+                        .frame(width: 100, height: 100)
+                case .success(let image):
+                    image
+                        .resizable()
+                        .frame(width: 100, height:100)
+                        .scaledToFill()
+                        .padding()
+                case .failure(let error):
+                    Image(systemName: "xmark")
+                        .resizable()
+                        .frame(width: 100, height:100)
+                        .scaledToFill()
+                        .padding()
+                default:
+                    ProgressView()
+                        .frame(width: 100, height: 100)
+                }
             }
             
             VStack(alignment: .leading,
